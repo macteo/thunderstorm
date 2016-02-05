@@ -115,12 +115,14 @@ func main() {
 			Action: func(c *cli.Context) {
 				deviceToken := c.Args().First()
 
-				cert, err := certificate.Load(filename, passphrase)
+				cert, private, err := certificate.Load(filename, passphrase)
 				if err != nil {
 					log.Fatal(err)
+					return
 				}
+				tls := certificate.TLS(cert, private)
 
-				commonName := cert.Leaf.Subject.CommonName
+				commonName := tls.Leaf.Subject.CommonName
 				bundle := strings.Replace(commonName, "Apple Push Services: ", "", 1)
 
 				var environment = push.Development
@@ -129,7 +131,7 @@ func main() {
 					environment = push.Production
 				}
 				service := push.Service{
-					Client: push.NewClient(cert),
+					Client: push.NewClient(tls),
 					Host:   environment,
 				}
 
