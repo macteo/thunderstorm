@@ -12,8 +12,6 @@ import (
 	"github.com/RobotsAndPencils/buford/payload/badge"
 	"github.com/RobotsAndPencils/buford/push"
 	"github.com/codegangsta/cli"
-	// TODO: if the pull request to support category is accepted we can go back
-	// to the main RobotsAndPencils repo
 )
 
 func send(token string, headers *push.Headers, payload interface{}, service *push.Service) {
