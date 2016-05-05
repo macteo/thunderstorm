@@ -11,12 +11,13 @@ class Thunderstorm < Formula
   def install
     ENV["GOPATH"] = buildpath
 
-    goCommand = "/usr/local/go/bin/go"
+    # goCommand = "go"
 
-    system goCommand, "get", "golang.org/x/crypto/pkcs12"
-    system goCommand, "get", "github.com/codegangsta/cli"
-    system goCommand, "get", "github.com/RobotsAndPencils/buford"
-    system goCommand, "build", "-o", "thunderstorm"
+    system "go", "get", "golang.org/x/net/http2"
+    system "go", "get", "golang.org/x/crypto/pkcs12"
+    system "go", "get", "github.com/codegangsta/cli"
+    system "go", "get", "github.com/RobotsAndPencils/buford"
+    system "go", "build", "-o", "thunderstorm"
     bin.install "thunderstorm"
   end
 
