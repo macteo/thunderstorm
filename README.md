@@ -15,3 +15,7 @@ go get -u github.com/RobotsAndPencils/buford
 ```
 
 More instructions to follow.
+
+```bash
+go build -gcflags="-newexport" -ldflags="-w"
+```

@@ -45,7 +45,7 @@ func main() {
 	app.Name = "thunderstorm"
 	// app.EnableBashCompletion = true
 	app.Usage = "push TOKEN [...]"
-	app.Version = "0.1.0"
+	app.Version = "0.2.0"
 	app.Commands = []cli.Command{
 		{
 			Name:  "push",
@@ -115,12 +115,14 @@ func main() {
 			Action: func(c *cli.Context) {
 				deviceToken := c.Args().First()
 
-				cert, err := certificate.Load(filename, passphrase)
+				cert, privateKey, err := certificate.Load(filename, passphrase)
 				if err != nil {
 					log.Fatal(err)
 				}
 
-				commonName := cert.Leaf.Subject.CommonName
+				tls := certificate.TLS(cert, privateKey)
+
+				commonName := tls.Leaf.Subject.CommonName
 				bundle := strings.Replace(commonName, "Apple Push Services: ", "", 1)
 
 				var environment = push.Development
@@ -128,8 +130,14 @@ func main() {
 				if environmentString == "production" {
 					environment = push.Production
 				}
+
+				client, err := push.NewClient(tls)
+				if err != nil {
+					log.Fatal(err)
+				}
+
 				service := push.Service{
-					Client: push.NewClient(cert),
+					Client: client,
 					Host:   environment,
 				}
 
