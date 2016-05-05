@@ -45,7 +45,7 @@ func main() {
 	app.Name = "thunderstorm"
 	// app.EnableBashCompletion = true
 	app.Usage = "push TOKEN [...]"
-	app.Version = "0.1.0"
+	app.Version = "0.2.0"
 	app.Commands = []cli.Command{
 		{
 			Name:  "push",
@@ -130,8 +130,14 @@ func main() {
 				if environmentString == "production" {
 					environment = push.Production
 				}
+
+				client, err := push.NewClient(tls)
+				if err != nil {
+					log.Fatal(err)
+				}
+
 				service := push.Service{
-					Client: push.NewClient(tls),
+					Client: client,
 					Host:   environment,
 				}
 

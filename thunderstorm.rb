@@ -2,7 +2,7 @@ class Thunderstorm < Formula
   desc "Open source CLI for buford to send push notifications to Apple devices through HTTP/2"
   homepage "https://github.com/macteo/thunderstorm"
   url "https://github.com/macteo/thunderstorm.git",
-    :tag => "v0.1.3"
+    :tag => "v0.2.0"
 
   head "https://github.com/macteo/thunderstorm.git"
 
