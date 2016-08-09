@@ -51,7 +51,7 @@ func main() {
 	app.Name = "thunderstorm"
 	// app.EnableBashCompletion = true
 	app.Usage = "push TOKEN [...]"
-	app.Version = "0.2.0"
+	app.Version = "0.2.1"
 	app.Commands = []cli.Command{
 		{
 			Name:  "push",
