@@ -1,12 +1,12 @@
 # Thunderstorm
 
-You should be able to install Thunderstorm either compiling it directly or, only if you already have Go 1.6 installed and have a mac, using [homebrew](http://brew.sh).
+You should be able to install Thunderstorm either compiling it directly or using [homebrew](http://brew.sh) on a Mac.
 
 ```bash
 brew install https://raw.github.com/macteo/thunderstorm/master/thunderstorm.rb
 ```
 
-If you want to compile it yourself, please install Go 1.6 and then
+If you want to compile it yourself, please [install Go](https://golang.org/doc/install#install) then on the terminal get the required dependancies.
 
 ```bash
 go get -u golang.org/x/crypto/pkcs12
@@ -14,7 +14,7 @@ go get -u github.com/aai/gocrypto/pkcs7
 go get -u github.com/RobotsAndPencils/buford
 ```
 
-More instructions to follow.
+Then build the executable
 
 ```bash
 go build -gcflags="-newexport" -ldflags="-w"

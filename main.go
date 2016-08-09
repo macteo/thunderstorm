@@ -18,7 +18,13 @@ func send(token string, headers *push.Headers, payload interface{}, service *pus
 	if token != "" {
 		println("Sending push: ", token)
 
-		id, err := service.Push(token, headers, payload)
+		b, err := json.Marshal(payload)
+		if err != nil {
+			println("Cannot parse payload")
+			os.Exit(1)
+		}
+
+		id, err := service.Push(token, headers, b)
 		if err != nil {
 			log.Fatal(err, id)
 		} else {
@@ -110,19 +116,35 @@ func main() {
 				},
 			},
 
+			// TODO: support low priority notifications
+			// TODO: support expiration time
+			// TODO: support id
+			// TODO: support apns-collapse-id
+			// TODO: support threads
+
+			// TODO: support buford features https://github.com/RobotsAndPencils/buford
+
+			// TODO: use a queue to send push notifications
+
 			// TODO: support other parameters https://github.com/nomad/houston/blob/master/bin/apn
 
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				deviceToken := c.Args().First()
 
-				cert, private, err := certificate.Load(filename, passphrase)
+				cert, err := certificate.Load(filename, passphrase)
 				if err != nil {
+					// TODO detect if the error is
+					// "pkcs12: expected exactly two safe bags in the PFX PDU"
+					// and suggest to export the certificate from the keychain selecting
+					// only one row
 					log.Fatal(err)
-					return
+					return err
 				}
-				tls := certificate.TLS(cert, private)
+				// tls := certificate.TLS(cert, private)
 
-				commonName := tls.Leaf.Subject.CommonName
+				certificate.TopicFromCert(cert)
+
+				commonName := cert.Leaf.Subject.CommonName
 				bundle := strings.Replace(commonName, "Apple Push Services: ", "", 1)
 
 				var environment = push.Development
@@ -131,7 +153,7 @@ func main() {
 					environment = push.Production
 				}
 
-				client, err := push.NewClient(tls)
+				client, err := push.NewClient(cert)
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -153,7 +175,7 @@ func main() {
 					error := json.Unmarshal([]byte(payloadString), &p)
 					if error != nil {
 						log.Fatal("Cannot parse payload")
-						return
+						return err
 					}
 				}
 
@@ -161,6 +183,7 @@ func main() {
 					bUint := uint(badgeInt)
 
 					// TODO: use Alert title, body and action or let it be with paylod
+					// TODO: support mutable-content modifier
 					pay := payload.APS{
 						Alert:            payload.Alert{Body: alert},
 						Badge:            badge.New(bUint),
@@ -188,7 +211,7 @@ func main() {
 						error := json.Unmarshal([]byte(tokensString), &tokens)
 						if error != nil {
 							log.Fatal("Cannot parse tokens array", error)
-							return
+							return error
 						}
 						for _, token := range tokens {
 							send(token, headers, p, &service)
@@ -197,6 +220,7 @@ func main() {
 				} else {
 					send(deviceToken, headers, p, &service)
 				}
+				return nil
 			},
 		},
 	}
