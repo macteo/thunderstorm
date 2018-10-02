@@ -6,7 +6,7 @@ class Thunderstorm < Formula
   # url "https://github.com/macteo/thunderstorm.git", :tag => "v0.2.0"
 
   url 'https://github.com/macteo/thunderstorm/archive/v0.2.1.tar.gz'
-  sha256 '0bcc539498c918a8d139e02effb396ef7a13964385a87a6b1e0af9f689bfa1cf'
+  sha256 '07294758c2a55c4c0dc45990e4951ed58f2bbb90867e8fb2542364abb7fb7d51'
 
   head 'https://github.com/macteo/thunderstorm.git'
 
